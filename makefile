@@ -1,37 +1,38 @@
 PROGRAM = main
+PROGRAM_MODULES = data_extractor
 
 CXX = clang++
 
-MODULES_PATH = .
+MODULES_PATH        = .
+PREBUILD_MODULES_PATH        = -fprebuilt-module-path=$(MODULES_PATH)
+ENABLE_MODULES_FLAG = -fmodules-ts $(PREBUILD_MODULES_PATH)
 
-PRECOMPILE_MODULE_FLAGS = -fmodules-ts --precompile
-BUILD_MODULE_FLAGS      = -fmodules-ts -c
-BUILD_PROGRAM_FLAGS     = -fmodules-ts -fprebuilt-module-path=$(MODULES_PATH)
+PRECOMPILE_MODULE =  $(ENABLE_MODULES_FLAG) --precompile
+BUILD_MODULE      =  $(ENABLE_MODULES_FLAG) -c
 
-precompile:
-	$(CXX) $(PRECOMPILE_MODULE_FLAGS) *.cppm
+build_all_module:
+	@read -p "Enter Module Name:" module; \
+	$(CXX) $(PRECOMPILE_MODULE) $$module.cppm;\
+	$(CXX) $(BUILD_MODULE) $(MODULES_PATH)/*.o $$module.pcm;\
 
-build_modules:
-	$(CXX) $(BUILD_MODULE_FLAGS) *.pcm
+build_module:
+	@read -p "Enter Module Name:" module; \
+	$(CXX) $(PRECOMPILE_MODULE) $$module.cppm;\
+	$(CXX) $(BUILD_MODULE) $(MODULES_PATH)/*.o $$module.pcm;\
 
 build_program:
-	$(CXX) $(BUILD_PROGRAM_FLAGS) *.o $(PROGRAM).cpp
+	$(CXX) $(ENABLE_MODULES_FLAG) *.o $(PROGRAM).cpp
 
 show:
 	@echo "PROGRAM                  : " $(PROGRAM)
 	@echo "COMPILER                 : " $(CXX)
 	@echo "MODULES_PATH             : " $(MODULES_PATH)
 
-all:
-	$(MAKE) precompile
-	$(MAKE) build_modules
-	$(MAKE) build_program
-
 run:
 	./a.out
 
 clean:
-	rm *.pcm *.o *.out
+	rm *.pcm *.o
 
 help:
 	@echo "Software Design: Assignment 1"
@@ -39,7 +40,7 @@ help:
 	@echo 'Usage: make [OPTIONS]'
 	@echo 'OPTIONS:'
 	@echo '  run            Run the program'
-	@echo '  all        Rebuild everything'
+	@echo '  all            Compile and Clean'
 	@echo '  precompile     Only compile the modules'
 	@echo '  build_modules  Only run preprocess, compile and assemble steps'
 	@echo '  build_program  Build the program'

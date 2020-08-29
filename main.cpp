@@ -1,12 +1,11 @@
-import file_handler;
-import other_file_handler;
-#include<iostream>
+import data_extractor;
+
+#include <iostream>
+#include <string>
 using namespace std;
 
-
-int main()
+int main(int argc, char** argv)
 {
-    file_handler_print();
-    other_file_handler_print();
+    read_file(argv[1]);
     return 0;
 }
