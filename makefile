@@ -3,46 +3,46 @@ PROGRAM_MODULES = data_extractor
 
 CXX = clang++
 
-MODULES_PATH        = .
-PREBUILD_MODULES_PATH        = -fprebuilt-module-path=$(MODULES_PATH)
+PREBUILD_MODULES_PATH        = -fprebuilt-module-path=.
 ENABLE_MODULES_FLAG = -fmodules-ts $(PREBUILD_MODULES_PATH)
 
-PRECOMPILE_MODULE =  $(ENABLE_MODULES_FLAG) --precompile
-BUILD_MODULE      =  $(ENABLE_MODULES_FLAG) -c
+PRECOMPILE_MODULE =  $(CXX) $(ENABLE_MODULES_FLAG) --precompile
+BUILD_MODULE      =  $(CXX) $(ENABLE_MODULES_FLAG) -c
+BUILD_PROGRAM     =  $(CXX) $(ENABLE_MODULES_FLAG) *.o
 
-build_all_module:
-	@read -p "Enter Module Name:" module; \
-	$(CXX) $(PRECOMPILE_MODULE) $$module.cppm;\
-	$(CXX) $(BUILD_MODULE) $(MODULES_PATH)/*.o $$module.pcm;\
+# DO NOT CHANGE THE ORDER OF THESE ITEMS
+MODULES = string_ops data_extractor geometry
 
 build_module:
-	@read -p "Enter Module Name:" module; \
-	$(CXX) $(PRECOMPILE_MODULE) $$module.cppm;\
-	$(CXX) $(BUILD_MODULE) $(MODULES_PATH)/*.o $$module.pcm;\
+	@read -p "Enter Module Name: " module; \
+		$(PRECOMPILE_MODULE) $$module.cppm;\
+		$(BUILD_MODULE) $$module.pcm;\
 
 build_program:
-	$(CXX) $(ENABLE_MODULES_FLAG) *.o $(PROGRAM).cpp
+	$(BUILD_PROGRAM) $(PROGRAM).cpp -o main.out
+
+all:
+	$(foreach dir,$(MODULES), $(PRECOMPILE_MODULE) $(dir).cppm; $(BUILD_MODULE) $(dir).pcm;)
+	$(MAKE) build_program
+	$(MAKE) clean
 
 show:
 	@echo "PROGRAM                  : " $(PROGRAM)
 	@echo "COMPILER                 : " $(CXX)
-	@echo "MODULES_PATH             : " $(MODULES_PATH)
-
-run:
-	./a.out
+	@echo "MODULES                  : " $(MODULES)
 
 clean:
-	rm *.pcm *.o
+	@rm -f *.pcm *.o
+	@echo "Cleaned Successfully!"
 
 help:
 	@echo "Software Design: Assignment 1"
+	@echo "Run the program with './main.out path_to_data_file'"
 	@echo
 	@echo 'Usage: make [OPTIONS]'
 	@echo 'OPTIONS:'
-	@echo '  run            Run the program'
-	@echo '  all            Compile and Clean'
-	@echo '  precompile     Only compile the modules'
-	@echo '  build_modules  Only run preprocess, compile and assemble steps'
-	@echo '  build_program  Build the program'
+	@echo '  all            Build default modules and program'
+	@echo '  build_module   Build module'
+	@echo '  build_program  Build the program with prebuild modules'
 	@echo '  show           Show variables (for debug use only)'
 	@echo '  help           print this message.'
