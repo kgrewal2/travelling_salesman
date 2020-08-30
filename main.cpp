@@ -18,7 +18,6 @@ int main(int argc, char** argv)
     int cols = get_cols(array);
     int distance = 0;
     for (int i = 0; i < rows - 1; i++) {
-        cout << int(array.data[i * cols])<<" ";
         distance += get_distance(array.data[i * cols + 1], array.data[i * cols + 2], array.data[(i + 1) * cols + 1], array.data[(i + 1) * cols + 2]);
     }
     cout<<distance;
