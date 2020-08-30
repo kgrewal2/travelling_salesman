@@ -1,5 +1,5 @@
 PROGRAM = main
-PROGRAM_MODULES = data_extractor
+PROGRAM_MODULES =vector_ops str_ops scraper geometry tsp_algo
 
 CXX = clang++
 
@@ -11,7 +11,7 @@ BUILD_MODULE      =  $(CXX) $(ENABLE_MODULES_FLAG) -c
 BUILD_PROGRAM     =  $(CXX) $(ENABLE_MODULES_FLAG) *.o
 
 # DO NOT CHANGE THE ORDER OF THESE ITEMS
-MODULES = string_ops data_extractor geometry
+MODULES = vector_ops str_ops scraper geometry tsp_algo
 
 build_module:
 	@read -p "Enter Module Name: " module; \
@@ -19,12 +19,12 @@ build_module:
 		$(BUILD_MODULE) $$module.pcm;\
 
 build_program:
-	$(BUILD_PROGRAM) $(PROGRAM).cpp -o main.out
+	@$(BUILD_PROGRAM) $(PROGRAM).cpp -o main.out
 
 all:
-	$(foreach dir,$(MODULES), $(PRECOMPILE_MODULE) $(dir).cppm; $(BUILD_MODULE) $(dir).pcm;)
-	$(MAKE) build_program
-	$(MAKE) clean
+	@$(foreach dir,$(MODULES), $(PRECOMPILE_MODULE) $(dir).cppm; $(BUILD_MODULE) $(dir).pcm;)
+	@$(MAKE) build_program
+	@echo "Done"
 
 show:
 	@echo "PROGRAM                  : " $(PROGRAM)

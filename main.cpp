@@ -1,8 +1,11 @@
-import data_extractor;
-import geometry;
-
+#include "bits/stdc++.h"
 #include <iostream>
 #include <string>
+import scraper;
+import geometry;
+import tsp_algo;
+import vector_ops;
+
 using namespace std;
 
 int main(int argc, char** argv)
@@ -13,14 +16,13 @@ int main(int argc, char** argv)
         getline(cin, filename);
     } else
         filename = argv[1];
-    struct file_data array = extract_data(filename);
-    int rows = array.dimension;
-    int cols = get_cols(array);
-    int distance = 0;
-    for (int i = 0; i < rows - 1; i++) {
-        distance += get_distance(array.data[i * cols + 1], array.data[i * cols + 2], array.data[(i + 1) * cols + 1], array.data[(i + 1) * cols + 2]);
-    }
-    cout<<distance;
-    delete[] array.data;
+
+    struct scraper::file_data filedata = scraper::extract_data(filename);
+
+    int rows = filedata.dimension;
+    int cols = scraper::get_cols(filedata);
+    vector_ops::print_vector(filedata.point_data);
+    cout << tsp_algo::linear_tsp(filedata.point_data, rows, cols);
+
     return 0;
 }
