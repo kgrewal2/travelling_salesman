@@ -21,8 +21,11 @@ int main(int argc, char** argv)
 
     int rows = filedata.dimension;
     int cols = scraper::get_cols(filedata);
-    vector_ops::print_vector(filedata.point_data);
-    cout << tsp_algo::linear_tsp(filedata.point_data, rows, cols);
+
+    /* ----------------- */
+    vector<vector<float>> visited;
+    tsp_algo::nearest_neighbour_tsp(filedata.point_data, visited);
+    /* vector_ops::print_vector(visited); */
 
     return 0;
 }

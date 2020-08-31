@@ -11,7 +11,7 @@ BUILD_MODULE      =  $(CXX) $(ENABLE_MODULES_FLAG) -c
 BUILD_PROGRAM     =  $(CXX) $(ENABLE_MODULES_FLAG) *.o
 
 # DO NOT CHANGE THE ORDER OF THESE ITEMS
-MODULES = vector_ops str_ops scraper geometry tsp_algo
+MODULES = rand_gen vector_ops str_ops scraper geometry tsp_algo
 
 build_module:
 	@read -p "Enter Module Name: " module; \
